@@ -1,2 +1,1 @@
-
-class music 
+class Music 

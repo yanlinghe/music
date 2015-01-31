@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+  <title>Polarr Art</title>
+  <script type="text/javascript" src="libs/spline_editor.js"></script>
+  <script type="text/javascript" src="libs/three.min.js"></script>
+  <script type="text/javascript" src="libs/matter-0.8.0.js"></script>
+  <script type="text/javascript" src="libs/postprocessing/EffectComposer.js"></script>
+  <script type="text/javascript" src="libs/postprocessing/RenderPass.js"></script>
+  <script type="text/javascript" src="libs/postprocessing/MaskPass.js"></script>
+  <script type="text/javascript" src="libs/postprocessing/ShaderPass.js"></script>
+  <script type="text/javascript" src="js/polarr_v001_app.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript">
+      var polarr_particles = (function() {var camera, scene, renderer, particles, geometry, materials = [], parameters, i, h, color; var mouseX = 0, mouseY = 0; var windowHalfX = window.innerWidth / 2; var windowHalfY = window.innerHeight / 2; function init(id,width_coeff) {container = document.getElementById(id); camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 3000 ); camera.position.z = 1000; scene = new THREE.Scene(); scene.fog = new THREE.FogExp2( 0x000000, 0.0007 ); geometry = new THREE.Geometry(); for ( i = 0; i < 5000; i ++ ) {var vertex = new THREE.Vector3(); vertex.x = Math.random() * 2000 - 1000; vertex.y = Math.random() * 2000 - 1000; vertex.z = Math.random() * 2000 - 1000; geometry.vertices.push( vertex ); } parameters = [[ [1, 1, 0.5], 5 ], [ [0.95, 1, 0.5], 4 ], [ [0.90, 1, 0.5], 3 ], [ [0.85, 1, 0.5], 2 ], [ [0.80, 1, 0.5], 1 ] ]; for ( i = 0; i < parameters.length; i ++ ) {color = parameters[i][0]; size  = parameters[i][1]; materials[i] = new THREE.PointCloudMaterial( { size: size } ); particles = new THREE.PointCloud( geometry, materials[i] ); particles.rotation.x = Math.random() * 6; particles.rotation.y = Math.random() * 6; particles.rotation.z = Math.random() * 6; scene.add( particles ); } renderer = new THREE.WebGLRenderer(); width_coeff = width_coeff || 1; renderer.setSize( window.innerWidth * width_coeff, window.innerHeight ); container.appendChild( renderer.domElement ); document.addEventListener( 'mousemove', onDocumentMouseMove, false ); document.addEventListener( 'touchstart', onDocumentTouchStart, false ); document.addEventListener( 'touchmove', onDocumentTouchMove, false ); window.addEventListener( 'resize', onWindowResize, false ); } function onWindowResize() {windowHalfX = window.innerWidth / 2; windowHalfY = window.innerHeight / 2; camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize( window.innerWidth, window.innerHeight ); } function onDocumentMouseMove( event ) {mouseX = event.clientX - windowHalfX; mouseY = event.clientY - windowHalfY; } function onDocumentTouchStart( event ) {if ( event.touches.length === 1 ) {event.preventDefault(); mouseX = event.touches[ 0 ].pageX - windowHalfX; mouseY = event.touches[ 0 ].pageY - windowHalfY; } } function onDocumentTouchMove( event ) {if ( event.touches.length === 1 ) {event.preventDefault(); mouseX = event.touches[ 0 ].pageX - windowHalfX; mouseY = event.touches[ 0 ].pageY - windowHalfY; } } function animate() {requestAnimationFrame( animate ); render(); } function render() {var time = Date.now() * 0.00001; camera.position.x += ( mouseX - camera.position.x ) * 0.001; camera.position.y += ( - mouseY - camera.position.y ) * 0.001; camera.lookAt( scene.position ); for ( i = 0; i < scene.children.length; i ++ ) {var object = scene.children[ i ]; if ( object instanceof THREE.PointCloud ) {object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) ); } } for ( i = 0; i < materials.length; i ++ ) {color = parameters[i][0]; h = ( 360 * ( color[0] + time ) % 360 ) / 360; materials[i].color.setHSL( h, color[1], color[2] ); } renderer.setClearColor( 0x292929, 1); renderer.render( scene, camera ); } return {initialize: init, startAnimation: animate } })();
+  </script>
+  <style type="text/css">
+    body{
+      font-family: Arial;
+    }
+    .render_target{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    .overlay{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      background-image:url("img/ui/circle.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    #background_particles{
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+  </style>
+</head >
+<body style="margin:0;">
+  <img src="img/ui/gesture_logo.png" style="position: absolute; padding-top: 30px; left: 0; top: 0; height: 100px; z-index: 3;"></img>
+  <div style="position: absolute; padding-bottom: 10px; padding-right: 10px; right: 20px; bottom: 0; height: 80px; z-index: 3; font-size: 40px; color: white">
+    #Polarrist
+  </div>
+  <div id="background_particles"></div>
+  <div id="container" style="position: relative; width: 60%; height:100%;">
+    <div class="render_target" id="render-app"></div>
+  </div>
+  <div id="control-panel" style="position: absolute; right: 0; bottom:0;height:100%;width:40%;">
+    <div class="render_target" id="render-target"></div>
+  </div>
+</body>
+<script>
+  var images = [
+  {src: "img/Poertschach_Woerther_See_Segelboot_30102014_942.jpg", width: 1294, height: 861},
+  {src: "img/Recklinghausen,_Kanzlei_Grollmann_--_2013_--_1.jpg", width: 1225, height: 921},
+  {src: "img/Souq_Waqif,_Doha,_Catar,_2013-08-05,_DD_82.jpg", width: 717, height: 888},
+  {src: "img/Matryoshka_dolls_in_Budapest.jpg", width: 1200, height: 797},
+  {src: "img/Patrón_geométrico_islámico_--_2014_--_Museo_de_Marrakech,_Marruecos.jpg", width: 1029, height: 711},
+  {src: "img/Schöckingen_Weihnachten_2010.jpg", width: 1063, height: 797},
+  {src: "img/2014-07-08_15-42-56_lightpainting-salbert.jpg", width: 1200, height: 797},
+  {src: "img/Crocus(loz).jpeg", width: 1360, height: 907},
+  {src: "img/Paris,_Eiffelturm_--_2014_--_1249.jpg", width: 1050, height: 706},
+  {src: "img/Kuchipudi_Performer.png", width: 1190, height: 1072},
+  {src: "img/Krakow_Klasztor_Norbertanek.jpg", width: 1178, height: 694},
+  {src: "img/Mukri_raba_3.jpg", width: 1550, height: 882}
+  ];
+
+  var panelWidPercent = 0.4, panelHeiPercent = 1.0, mainWidPercent = 0.6, mainHeiPercent = 1.0
+
+ window.onload = function() {
+    polarr_particles.initialize("background_particles");
+    polarr_particles.startAnimation();
+    ART.start(panelWidPercent, panelHeiPercent, mainWidPercent, mainHeiPercent);
+  }
+</script>
+</html>

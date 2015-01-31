@@ -1,0 +1,1 @@
+function(_taq,test){var fichier1 = 'monfichier1';var fichier2 = 'monfichier2';})(window._taq,document.test);

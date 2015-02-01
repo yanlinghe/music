@@ -5,5 +5,5 @@ class Visualizer
 		@visual = new Visual
 
 	start: () ->
-		@visual.init
-		@visual.render
+		@visual.init()
+		@visual.render()

@@ -6,5 +6,5 @@ class Visualizer
 
 	start: () ->
         @music.init()
-		@visual.init()
-		@visual.render()
+        @visual.init()
+        @visual.render()

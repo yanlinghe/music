@@ -201,12 +201,10 @@ Visualizer = (function() {
   }
 
   Visualizer.prototype.start = function() {
-    return this.music.init();
+    this.music.init();
+    this.visual.init();
+    return this.visual.render();
   };
-
-  Visualizer.visual.init();
-
-  Visualizer.visual.render();
 
   return Visualizer;
 

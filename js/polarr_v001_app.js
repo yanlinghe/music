@@ -2,18 +2,20 @@ var Music;
 
 Music = (function() {
   function Music(options) {
-    console.log('here');
     this.filename = options.filename;
     this.ctx;
     this.buf;
     this.fft;
     this.samples = 128;
     this.setup = false;
+    this.gfx;
+    this.wWidth;
+    this.wHeight;
+    this.height = 300;
   }
 
   Music.prototype.init = function() {
     var e;
-    console.log('in init');
     try {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       console.log(this.ctx);
@@ -35,7 +37,9 @@ Music = (function() {
         console.log(_this.ctx);
         return _this.ctx.decodeAudioData(req.response, function(buffer) {
           _this.buf = buffer;
-          return _this.play();
+          _this.play();
+          _this.setupCanvas();
+          return _this.update();
         });
       };
     })(this);
@@ -52,6 +56,41 @@ Music = (function() {
     this.fft.connect(this.ctx.destination);
     src.start(0);
     return this.setup = true;
+  };
+
+  Music.prototype.setupCanvas = function() {
+    var canvas;
+    canvas = document.getElementById('canvas');
+    this.gfx = canvas.getContext('2d');
+    this.wWidth = document.body.clientWidth;
+    this.wHeight = document.body.clientHeight;
+    canvas.width = this.wWidth;
+    return canvas.height = this.height;
+  };
+
+  Music.prototype.update = function() {
+    var barHeight, barWidth, bufferLength, data, i, x, _i, _results;
+    requestAnimationFrame(this.update.bind(this));
+    if (!this.setup) {
+      return;
+    }
+    this.gfx.clearRect(0, 0, this.wWidth, this.height);
+    this.gfx.fillStyle = 'rgb(20, 20, 20)';
+    this.gfx.fillRect(0, 0, this.wWidth, this.height);
+    bufferLength = this.fft.frequencyBinCount;
+    data = new Uint8Array(bufferLength);
+    this.fft.getByteFrequencyData(data);
+    barWidth = this.wWidth / bufferLength;
+    barHeight;
+    x = 0;
+    _results = [];
+    for (i = _i = 0; 0 <= bufferLength ? _i <= bufferLength : _i >= bufferLength; i = 0 <= bufferLength ? ++_i : --_i) {
+      barHeight = data[i] / 2;
+      this.gfx.fillStyle = 'rgb(' + (barHeight + 100) + ', 50, 50)';
+      this.gfx.fillRect(x, this.height - barHeight, barWidth, barHeight);
+      _results.push(x += barWidth + 1);
+    }
+    return _results;
   };
 
   return Music;

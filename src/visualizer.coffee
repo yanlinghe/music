@@ -1,9 +1,10 @@
 
 class Visualizer 
 	constructor: (options) ->
-		@music = new Music
+		@music = new Music {filename: 'numb.mp3'}
 		@visual = new Visual
 
 	start: () ->
-		@visual.init
-		@visual.render
+        @music.init()
+		@visual.init()
+		@visual.render()

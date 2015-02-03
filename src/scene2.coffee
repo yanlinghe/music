@@ -36,12 +36,12 @@ class Scene2
 				particle.position.z = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 );
 				@scene.add( particle );
 
-	update: () ->
+	update: ( ratio ) ->
 		i = 0
 		for ix in [0...AMOUNTX]
 			for iy in [0...AMOUNTY]
 				particle = @particles[ i++ ]
-				particle.position.y = ( Math.sin( ( ix + @count ) * 0.3 ) * 50 ) +
+				particle.position.y = ( Math.sin( ( ix + @count ) * 0.3) * 50 ) +
 					( Math.sin( ( iy + @count ) * 0.5 ) * 50 )
 				particle.scale.x = particle.scale.y = ( Math.sin( ( ix + @count ) * 0.3 ) + 1 ) * 4 +
 					( Math.sin( ( iy + @count ) * 0.5 ) + 1 ) * 4

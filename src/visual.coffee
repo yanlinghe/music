@@ -1,5 +1,6 @@
 class Visual
 	constructor: (options) ->
+		{@music} = options
 		@container = document.getElementById( 'container' )
 
 		@camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 4000 )
@@ -29,8 +30,9 @@ class Visual
 		# effect.renderToScreen = true;
 		# @composer.addPass( effect );
 
-	render: () ->
+	render: (ratio) ->
 		requestAnimationFrame( @render.bind(this) )
-		@scene2.update()
+		
+		@scene2.update(@music.getBarWidth())
 		@composer.render()
 

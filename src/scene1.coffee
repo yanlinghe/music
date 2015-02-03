@@ -54,7 +54,7 @@ class Scene1
 	makeParticles: () ->
 		# we're gonna move from z position -1000 (far away) 
 		# to 1000 (where the camera is) and add a random particle at every pos. 
-		for zpos in [-1000..1000] by 20
+		for zpos in [-5000..5000] by 20
 		
 			# we make a particle material and pass through the 
 			# colour and custom particle render function we defined. 
@@ -66,8 +66,8 @@ class Scene1
 			particle = new THREE.Particle(spriteMaterial)
 			particle.material.color.setHSL( 1, 0.7, 0.6 )
 			# give it a random x and y position between -500 and 500
-			particle.position.x = Math.random() * 1000 - 500
-			particle.position.y = Math.random() * 1000 - 500
+			particle.position.x = Math.random() * 2000 - 1000
+			particle.position.y = Math.random() * 2000 - 1000
 		
 			# set its z position
 			particle.position.z = zpos

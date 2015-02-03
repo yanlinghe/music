@@ -11,13 +11,13 @@ class Visual
 
 		@composer = new THREE.EffectComposer( @renderer )
 
-		@scene1 = new Scene1 scene: @scene, composer: @composer, camera: @camera
+		@scene2 = new Scene2 scene: @scene, composer: @composer, camera: @camera
 
 	init: () ->
 		@container.appendChild( @renderer.domElement )
 		@composer.addPass( new THREE.RenderPass( @scene, @camera ) );
 
-		@scene1.start()
+		@scene2.start()
 
 		# effect = new THREE.ShaderPass( THREE.CopyShader );
 		# effect.uniforms[ 'scale' ].value = 2;
@@ -31,6 +31,6 @@ class Visual
 
 	render: () ->
 		requestAnimationFrame( @render.bind(this) )
-		@scene1.update()
+		@scene2.update()
 		@composer.render()
 

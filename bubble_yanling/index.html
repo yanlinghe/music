@@ -1,0 +1,110 @@
+<html>
+<head>
+	<title>BubbleTeaRender</title>
+	<script src="/brushes.js"></script>
+	<script src="/paths.js"></script>
+	<script src="/main.js"></script>
+	<script src="/victor.js"></script>
+	<script src="/volume-meter.js"></script>
+	<style type="text/css">
+		canvas{
+			border: 1px solid black;
+			cursor: crosshair;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		#from{
+			z-index: 0;
+		}
+		#to{
+			z-index: 1;
+		}
+		.knob input{
+			display: inline-block;
+		}
+		.label{
+			width: 100px;
+			display: inline-block;
+		}
+		#knobs{
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+
+	</style>
+</head>
+<body>
+	<canvas id="from" style="width:100%; height:100%"></canvas>
+	<canvas id="to" style="background-color: #000000; width:100%; height:100%"></canvas>
+	<div id="knobs">
+		<div class="knob">
+			<div class="label">
+				wind_chill
+			</div>
+			<input type="range" min=-40 max=40 value=20 id="wind_chill">
+		</div>
+		<div class="knob">
+			<div class="label">
+				wind_direction
+			</div>
+			<input type="range" min=0 max=360 value=20 id="wind_direction">
+		</div>
+		<div class="knob">
+			<div class="label">
+				wind_speed
+			</div>
+			<input type="range" min=0 max=60 value=20 id="wind_speed">
+		</div>
+		<div class="knob">
+			<div class="label">
+				atmos_humidity
+			</div>
+			<input type="range" min=0 max=100 value=40 id="atmos_humidity">
+		</div>
+		<div class="knob">
+			<div class="label">
+				atmos_visibility
+			</div>
+			<input type="range" min=0 max=30 value=1 id="atmos_visibility">
+		</div>
+		<div class="knob">
+			<div class="label">
+				atmos_pressure
+			</div>
+			<input type="range" min=20 max=40 value=4 id="atmos_pressure">
+		</div>
+		<div class="knob">
+			<div class="label">
+				atmos_rising
+			</div>
+			<input type="range" min=0 max=2 value=0 id="atmos_rising">
+		</div>
+		<div class="knob">
+			<div class="label">
+				code
+			</div>
+			<input type="range" min=0 max=47 value=20 id="code">
+		</div>
+		<div class="knob">
+			<div class="label">
+				temp
+			</div>
+			<input type="range" min=30 max=100 value=40 id="temp">
+		</div>
+		<div class="knob">
+			<div class="label">
+				day
+			</div>
+			<input type="range" min=1 max=7 value=1 id="day">
+		</div>
+		<div class="knob">
+			<div class="label">
+				time
+			</div>
+			<input type="range" min=0 max=1440 value=20 id="time">
+		</div>
+	</div>
+</body>
+</html>

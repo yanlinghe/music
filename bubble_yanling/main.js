@@ -110,7 +110,7 @@ function draw_from(){
 	image_from.onload = function() {
 	  context_from.drawImage(this, 0, 0, canvas_from.width, canvas_from.height);
 	};
-	image_from.src = "/03.jpg";
+	image_from.src = "/39.jpg";
 	return context_from;
 }
 
@@ -166,54 +166,7 @@ function draw_to(source_context){
 // tracing pattern
 
 function start_tracing(context_to,context_from){
-	var cur_points = new Array()
-	var cur_speed_vecs = new Array()
-	for (i = 0; i < TOTAL_NUM; i++) {
-		cur_points.push([Math.random() * BOUNDING_BOX_X, Math.random() * BOUNDING_BOX_Y])
-		cur_speed_vecs.push([1*Math.random(),-2*Math.random()]);
-	}
-	var cur_speed_vec_change = [0.6,1];
-	var cur_speed = 1;
 	var color;
-
-	var line_width;
-	var windChillSlider = document.getElementById('wind_chill')
-	var windDirectionSlider = document.getElementById('wind_direction')
-	var windSpeedSlider = document.getElementById('wind_speed')
-	var atmosHumiditySlider = document.getElementById('atmos_humidity')
-	var atmosVisibilitySlider = document.getElementById('atmos_visibility')
-	var atmosPressureSlider = document.getElementById('atmos_pressure')
-	var atmosRisingSlider = document.getElementById('atmos_rising')
-	var codeSlider = document.getElementById('code')
-	var tempSlider = document.getElementById('temp')
-	var daySlider = document.getElementById('day')
-	var timeSlider = document.getElementById('time')
-
-	var windChill = windChillSlider.value;
-	var windDirection = windDirectionSlider.value;
-	var windSpeed = windSpeedSlider.value;
-	var atmosHumidity = atmosHumiditySlider.value;
-	var atmosVisibility = atmosVisibilitySlider.value;
-	var atmosPressure = atmosPressureSlider.value;
-	var atmosRising = atmosRisingSlider.value;
-	var code = codeSlider.value;
-	var temp = tempSlider.value;
-	var day = daySlider.value;
-	var time = timeSlider.value;
-	var angle = windDirection / 360.0 * Math.PI; 
-
-	windChillSlider.oninput = function() { windChill = this.value; }
-    windDirectionSlider.oninput = function() { windDirection = this.value 
-    angle = windDirection / 360.0 * Math.PI; }
-    windSpeedSlider.oninput = function() { windSpeed = this.value }
-    atmosHumiditySlider.oninput = function() { atmosHumidity = this.value }
-    atmosVisibilitySlider.oninput = function() { atmosVisibility = this.value }
-    atmosPressureSlider.oninput = function() { atmosPressure = this.value }
-    atmosRisingSlider.oninput = function() { atmosRising = this.value }
-    codeSlider.oninput = function() { code = this.value }
-    tempSlider.oninput = function() { temp = this.value }
-    daySlider.oninput = function() { day = this.value }
-    timeSlider.oninput = function() { time = this.value }
 
     var count = 0;
 	setInterval(function(){
@@ -225,9 +178,14 @@ function start_tracing(context_to,context_from){
 		for (i in context_to.curves) {
 			color = context_from.getImageData(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, 1, 1).data;
 			context_to.curves[i].brush.stroke(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, "stitch", color, 1, 1.0, 500);
-			context_to.curves[i].path.update("line", 100, meter.volume);
+			context_to.curves[i].path.update("angular", 100, meter.volume);
 		}
 	},1000/30)
+
+
+	function clear() {
+		// context.clearRect ( 0 , 0 , canvas.width, canvas.height );
+	}
 
 }
 

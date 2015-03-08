@@ -93,7 +93,7 @@ PATH.prototype ={
 		}
 
 		// console.log(volumn)
-		this.delta_t = volumn*3;
+		this.delta_t = volumn*5;
 
 		switch (path) {
 			case "angular":

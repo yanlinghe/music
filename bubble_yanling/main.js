@@ -11,9 +11,11 @@ var audioContext = null;
 var meter = null;
 var rafID = null;
 
+var to;
+
 window.onload = function(){
 	var from = draw_from();
-	var to = draw_to(from);
+    to = draw_to(from);
 	ibrush = create_brush(BRUSH, to)
 	for (i = 0; i < TOTAL_NUM; i++) {
 		to.curves.push({brush: ibrush, path: create_path(PATH, to, "random")})
@@ -145,6 +147,34 @@ function draw_to(source_context){
 	return context_to;
 }
 
+// Beat detection
+var BEAT_HOLD_FRAMES = 15;
+var BEAT_THRESHOLD = 0.04 * 1000;
+var BEAT_DECAY_RATE = 0.88;
+
+var beatCutoff = 0;
+var framesSinceLastbeat = 0;
+
+function isBeat(level) {
+    level = level*1000;
+
+    if(level > beatCutoff && level > BEAT_THRESHOLD){
+        beatCutoff = level * 1.1;
+        framesSinceLastbeat = 0;
+        return true;
+    }
+        
+    else {
+        if (framesSinceLastbeat <= BEAT_HOLD_FRAMES) {
+            framesSinceLastbeat += 1;
+        }
+        else
+            beatCutoff *= BEAT_DECAY_RATE;
+            beatCutoff = Math.max(beatCutoff, BEAT_THRESHOLD)
+    }
+    return false;
+}
+
 // different brush
 
 // base shape (dot, shape, texture (transparency))
@@ -170,6 +200,8 @@ function start_tracing(context_to,context_from){
 
     var count = 0;
 	setInterval(function(){
+        console.log(isBeat(meter.volume));
+
 		// pick color
 		// brush color
 		count++
@@ -177,17 +209,18 @@ function start_tracing(context_to,context_from){
 			random1 = Math.random() * 5;
 		for (i in context_to.curves) {
 			color = context_from.getImageData(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, 1, 1).data;
-			context_to.curves[i].brush.stroke(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, "stitch", color, 1, 1.0, 500);
-			context_to.curves[i].path.update("angular", 100, meter.volume);
+			context_to.curves[i].brush.stroke(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, "colored", color, 10, 1.0, 500);
+			context_to.curves[i].path.update("random", 100, meter.volume);
 		}
+        if (!isBeat(meter.volume)) {
+            clear()
+        }
 	},1000/30)
 
-
-	function clear() {
-		// context.clearRect ( 0 , 0 , canvas.width, canvas.height );
-	}
-
 }
+	function clear() {
+		to.clearRect ( 0 , 0 , BOUNDING_BOX_X, BOUNDING_BOX_Y );
+	}
 
 
 

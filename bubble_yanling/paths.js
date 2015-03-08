@@ -196,7 +196,7 @@ PATH.prototype ={
 				new_pos = new Victor(this.cur_pos.x + this.cur_vel.x * this.delta_t, this.cur_pos.y + this.cur_vel.y * this.delta_t)
                 this.changeVelDir( new_pos );
                     
-                this.cur_acc = new Victor(acceleration.x, acceleration.y)
+                this.cur_acc = new Victor(Math.random() + 6 -3, Math.random()+6-3)
                 new_vel = new Victor(this.cur_vel.x + this.cur_acc.x * this.delta_t, this.cur_vel.y + this.cur_acc.y * this.delta_t)
                 if( new_vel.length() < MAX_VEL && new_vel.length() > MIN_VEL ){
                     delta_vel = new Victor( this.cur_acc.x * this.delta_t, this.cur_acc.y * this.delta_t)

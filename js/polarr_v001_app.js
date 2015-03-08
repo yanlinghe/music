@@ -13,6 +13,11 @@ Music = (function() {
     this.wHeight;
     this.height = 300;
     this.visual = options.visual;
+    this.beatHoldFrames = 18;
+    this.beatThreshold = 80;
+    this.beatCutoff = 0;
+    this.beatDecayRate = 0.95;
+    this.framesSinceLastbeat = 0;
   }
 
   Music.prototype.init = function() {
@@ -70,28 +75,65 @@ Music = (function() {
   };
 
   Music.prototype.update = function() {
-    var barHeight, barWidth, bufferLength, data, i, x, _i, _results;
+    var average, barHeight, barWidth, bufferLength, data, i, isBeat, x, _i;
     requestAnimationFrame(this.update.bind(this));
     if (!this.setup) {
       return;
     }
-    this.gfx.clearRect(0, 0, this.wWidth, this.height);
-    this.gfx.fillStyle = 'rgb(20, 20, 20)';
-    this.gfx.fillRect(0, 0, this.wWidth, this.height);
     bufferLength = this.fft.frequencyBinCount;
     data = new Uint8Array(bufferLength);
     this.fft.getByteFrequencyData(data);
-    barWidth = this.wWidth / bufferLength;
+    average = this.getAverageVolume(data, bufferLength);
+    isBeat = this.detectBeat(average);
+    this.gfx.clearRect(0, 0, this.wWidth, this.height);
+    this.gfx.fillStyle = 'rgb(20, 20, 20)';
+    this.gfx.fillRect(0, 0, this.wWidth, this.height);
+    barWidth = this.wWidth / (bufferLength + 10);
     barHeight;
     x = 0;
-    _results = [];
     for (i = _i = 0; 0 <= bufferLength ? _i <= bufferLength : _i >= bufferLength; i = 0 <= bufferLength ? ++_i : --_i) {
       barHeight = data[i] / 2;
       this.gfx.fillStyle = 'rgb(' + (barHeight + 100) + ', 50, 50)';
       this.gfx.fillRect(x, this.height - barHeight, barWidth, barHeight);
-      _results.push(x += barWidth + 1);
+      x += barWidth + 1;
     }
-    return _results;
+    barHeight = average / 2;
+    if (isBeat) {
+      this.gfx.fillStyle = 'rgb(255, 255, 255)';
+    } else {
+      this.gfx.fillStyle = 'rgb(' + (barHeight + 100) + ', 50, 50)';
+    }
+    return this.gfx.fillRect(x, this.height - barHeight, barWidth, barHeight);
+  };
+
+  Music.prototype.getAverageVolume = function(data, bufferLength) {
+    var i, values, _i;
+    values = 0;
+    for (i = _i = 0; 0 <= bufferLength ? _i <= bufferLength : _i >= bufferLength; i = 0 <= bufferLength ? ++_i : --_i) {
+      if (data[i] === void 0 || data[i] === NaN) {
+        values += 0;
+      } else {
+        values += data[i];
+      }
+    }
+    return values / bufferLength;
+  };
+
+  Music.prototype.detectBeat = function(average) {
+    console.log(average);
+    if (average > this.beatCutoff && average > this.beatThreshold) {
+      this.beatCutoff = average * 1.1;
+      this.framesSinceLastbeat = 0;
+      return true;
+    } else {
+      if (this.framesSinceLastbeat <= this.beatHoldFrames) {
+        this.framesSinceLastbeat += 1;
+      } else {
+        this.beatCutoff *= this.beatDecayRate;
+        this.beatCutoff = Math.max(this.beatCutoff, this.beatThreshold);
+      }
+    }
+    return false;
   };
 
   return Music;

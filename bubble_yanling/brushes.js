@@ -55,6 +55,32 @@ BRUSH.prototype ={
 					}
 				}
 				break;
+				case "stitch":
+                    var color_random = 1- Math.random() * 0.1;
+                    var line_width_factor = 5;
+                    var vec_length_factor = (Math.random()-1)*(this.count%200);
+                    var rotating_factor = Math.random();
+                    var opacity_random = Math.random();
+                    this.context.lineWidth = (line_width || 3) * line_width_factor * Math.random();
+                    this.context.strokeStyle = "rgba(" + Math.ceil(color[0]*color_random) + ", " + Math.ceil(color[1]*color_random) + ", " + Math.ceil(color[2]*color_random) + ", " + opacity_random + ")";
+                    this.context.beginPath();
+                    this.context.moveTo(mouseX - vec_length_factor, mouseY - vec_length_factor);
+                    this.context.lineTo(mouseX, mouseY);
+                    this.context.stroke();
+                    
+                    this.context.strokeStyle = "rgba(" + Math.ceil(color[0]*color_random) + ", " + Math.ceil(color[1]*color_random) + ", " + Math.ceil(color[2]*color_random) + ", " + opacity_random/5 + ")";
+                    this.context.beginPath();
+                    if(rotating_factor < 0.25){
+                        this.context.moveTo(mouseX - vec_length_factor, mouseY + vec_length_factor);
+                    }else if(rotating_factor < 0.5){
+                        this.context.moveTo(mouseX + vec_length_factor, mouseY - vec_length_factor);
+                    }else if(rotating_factor < 0.75){
+                        this.context.moveTo(mouseX - vec_length_factor, mouseY + vec_length_factor);
+                    }
+                    this.context.lineTo(mouseX, mouseY);
+                    this.context.stroke();
+                    
+                    break;
 			case "shaded":
 				connection_distance = connection_distance || 1000;
 				this.context.lineWidth = line_width || 3;

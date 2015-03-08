@@ -224,8 +224,8 @@ function start_tracing(context_to,context_from){
 			random1 = Math.random() * 5;
 		for (i in context_to.curves) {
 			color = context_from.getImageData(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, 1, 1).data;
-			context_to.curves[i].brush.stroke(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, "colored", color, 1, 1.0, 500);
-			context_to.curves[i].path.update("random", 100, meter.volume);
+			context_to.curves[i].brush.stroke(context_to.curves[i].path.cur_pos.x, context_to.curves[i].path.cur_pos.y, "stitch", color, 1, 1.0, 500);
+			context_to.curves[i].path.update("line", 100, meter.volume);
 		}
 	},1000/30)
 
